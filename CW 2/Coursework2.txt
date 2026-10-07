@@ -1,0 +1,236 @@
+/*
+Student name:  Daniel Georgiev
+Student ID: 240015628
+*/
+
+/* SECTION 1 - CREATE TABLE STATEMENTS */
+
+-- Table for Tournament
+CREATE TABLE Tournament (
+    tournament_id INTEGER PRIMARY KEY,
+    prize_pool INTEGER NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL
+);
+
+-- Table for Team
+CREATE TABLE Team (
+    team_id INTEGER PRIMARY KEY,
+    team_name VARCHAR(100) NOT NULL,
+    captain_id INTEGER,
+    tournament_id INTEGER,
+    FOREIGN KEY (tournament_id) REFERENCES Tournament(tournament_id)
+);
+
+-- Table for Player
+CREATE TABLE Player (
+    player_id INTEGER PRIMARY KEY,
+    name VARCHAR(40) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    join_date DATE NOT NULL,
+    team_id INTEGER,
+    FOREIGN KEY (team_id) REFERENCES Team(team_id)
+);
+
+-- Table for GameStatus
+CREATE TABLE GameStatus (
+    status_id INTEGER PRIMARY KEY,
+    status_description VARCHAR(50) NOT NULL
+);
+
+-- Table for Game
+CREATE TABLE Game (
+    game_id INTEGER PRIMARY KEY,
+    game_date DATE NOT NULL,
+    tournament_id INTEGER,
+    home_team_id INTEGER,
+    away_team_id INTEGER,
+    status_id INTEGER,
+    FOREIGN KEY (tournament_id) REFERENCES Tournament(tournament_id),
+    FOREIGN KEY (home_team_id) REFERENCES Team(team_id),
+    FOREIGN KEY (away_team_id) REFERENCES Team(team_id),
+    FOREIGN KEY (status_id) REFERENCES GameStatus(status_id)
+);
+
+-- Table for GameStats
+CREATE TABLE GameStats (
+    stats_id INTEGER PRIMARY KEY,
+    kills INTEGER NOT NULL,
+    deaths INTEGER NOT NULL,
+    assists INTEGER NOT NULL,
+    total_points INTEGER NOT NULL,
+    damage_dealt INTEGER NOT NULL,
+    total_headshots INTEGER NOT NULL,
+    game_id INTEGER,
+    player_id INTEGER,
+    FOREIGN KEY (game_id) REFERENCES Game(game_id),
+    FOREIGN KEY (player_id) REFERENCES Player(player_id)
+);
+
+/* SECTION 2 - INSERT STATEMENTS */
+
+-- Insert sample data into Tournament
+INSERT INTO Tournament VALUES 
+(1, 50000, '2024-01-01', '2024-01-15'),
+(2, 75000, '2024-02-01', '2024-02-20'),
+(3, 60000, '2024-03-01', '2024-03-15'),
+(4, 80000, '2024-04-01', '2024-04-18'),
+(5, 100000, '2024-05-01', '2024-05-25'),
+(6, 70000, '2024-06-01', '2024-06-15'),
+(7, 85000, '2024-07-01', '2024-07-20'),
+(8, 45000, '2024-08-01', '2024-08-10'),
+(9, 95000, '2024-09-01', '2024-09-18'),
+(10, 120000, '2024-10-01', '2024-10-25');
+
+-- Insert sample data into Team
+INSERT INTO Team VALUES 
+(1, 'Team Alpha', NULL, 1), 
+(2, 'Team Beta', NULL, 1), 
+(3, 'Team Gamma', NULL, 2), 
+(4, 'Team Delta', NULL, 2), 
+(5, 'Team Epsilon', NULL, 3), 
+(6, 'Team Zeta', NULL, 3), 
+(7, 'Team Eta', NULL, 4), 
+(8, 'Team Theta', NULL, 5), 
+(9, 'Team Iota', NULL, 6), 
+(10, 'Team Kappa', NULL, 7), 
+(11, 'Team Lambda', NULL, 8), 
+(12, 'Team Mu', NULL, 9), 
+(13, 'Team Nu', NULL, 10), 
+(14, 'Team Xi', NULL, 4), 
+(15, 'Team Omicron', NULL, 5);
+
+-- Insert sample data into Player
+INSERT INTO Player VALUES 
+(1, 'Alice', 'alice@example.com', '2023-01-01', 1),
+(2, 'Bob', 'bob@example.com', '2023-01-02', 1),
+(3, 'Charlie', 'charlie@example.com', '2023-01-03', 2),
+(4, 'David', 'david@example.com', '2023-02-01', 3),
+(5, 'Eve', 'eve@example.com', '2023-02-05', 3),
+(6, 'Frank', 'frank@example.com', '2023-03-01', 4),
+(7, 'Grace', 'grace@example.com', '2023-03-10', 5),
+(8, 'Hank', 'hank@example.com', '2023-03-20', 6),
+(9, 'Ivy', 'ivy@example.com', '2023-04-01', 7),
+(10, 'Jack', 'jack@example.com', '2023-04-15', 8),
+(11, 'Ken', 'ken@example.com', '2023-05-01', 9),
+(12, 'Liam', 'liam@example.com', '2023-05-10', 10),
+(13, 'Mia', 'mia@example.com', '2023-06-01', 11),
+(14, 'Nina', 'nina@example.com', '2023-06-15', 12),
+(15, 'Oscar', 'oscar@example.com', '2023-07-01', 13);
+
+-- Insert sample data into GameStatus
+INSERT INTO GameStatus VALUES 
+(1, 'Scheduled'), 
+(2, 'Completed');
+
+-- Insert sample data into Game
+INSERT INTO Game VALUES 
+(1, '2024-01-05', 1, 1, 2, 1),
+(2, '2024-01-10', 1, 1, 3, 2),
+(3, '2024-02-05', 2, 4, 5, 1),
+(4, '2024-03-10', 3, 6, 7, 2),
+(5, '2024-04-15', 4, 8, 9, 1),
+(6, '2024-05-20', 5, 10, 11, 2),
+(7, '2024-06-12', 6, 12, 13, 1),
+(8, '2024-07-18', 7, 14, 15, 2),
+(9, '2024-08-08', 8, 1, 8, 1),
+(10, '2024-09-16', 9, 2, 9, 2),
+(11, '2024-10-20', 10, 3, 10, 1),
+(12, '2024-10-25', 10, 4, 12, 1);
+
+
+/* SECTION 3 - UPDATE STATEMENTS */
+
+-- Assign Captains
+UPDATE Team SET captain_id = 1 WHERE team_id = 1;
+UPDATE Team SET captain_id = 2 WHERE team_id = 2;
+UPDATE Team SET captain_id = 4 WHERE team_id = 3;
+UPDATE Team SET captain_id = 6 WHERE team_id = 4;
+UPDATE Team SET captain_id = 8 WHERE team_id = 5;
+UPDATE Team SET captain_id = 10 WHERE team_id = 6;
+UPDATE Team SET captain_id = 12 WHERE team_id = 7;
+UPDATE Team SET captain_id = 14 WHERE team_id = 8;
+UPDATE Team SET captain_id = 15 WHERE team_id = 9;
+UPDATE Team SET captain_id = 13 WHERE team_id = 10;
+
+
+/* SECTION 4 - SELECT STATEMENTS */
+
+/* 1) Who is the captain of each team? */
+SELECT Team.team_name, Player.name AS captain_name
+FROM Team
+LEFT JOIN Player ON Team.captain_id = Player.player_id;
+
+/* 2) Which players joined more than 1 team? */
+-- Modified to provide output even if no players qualify
+SELECT Player.name, COUNT(DISTINCT Player.team_id) AS teams_joined
+FROM Player
+GROUP BY Player.name
+HAVING COUNT(DISTINCT Player.team_id) > 1
+UNION ALL
+SELECT 'No players', 0
+WHERE NOT EXISTS (
+    SELECT Player.name
+    FROM Player
+    GROUP BY Player.name
+    HAVING COUNT(DISTINCT Player.team_id) > 1
+);
+
+/* 3) How many players joined a specific team after a given date? */
+SELECT Team.team_name, COUNT(Player.player_id) AS players_joined
+FROM Player
+INNER JOIN Team ON Player.team_id = Team.team_id
+WHERE Player.join_date > '2023-01-01'
+GROUP BY Team.team_name;
+
+/* 4) What is the total prize pool of every tournament held? */
+SELECT SUM(Tournament.prize_pool) AS total_prize_pool FROM Tournament;
+
+/* 5) How many headshots were recorded by each player in a specific game? */
+-- Insert dummy data for GameStats
+INSERT INTO GameStats VALUES (1, 5, 2, 3, 10, 1000, 2, 1, 1);
+
+SELECT Player.name, GameStats.total_headshots
+FROM GameStats
+INNER JOIN Player ON GameStats.player_id = Player.player_id
+WHERE GameStats.game_id = 1;
+
+/* 6) How many games are scheduled or ongoing in a specific tournament? */
+SELECT COUNT(Game.game_id) AS scheduled_games
+FROM Game
+WHERE Game.tournament_id = 1 AND Game.status_id = 1;
+
+/* 7) How many games took place between given start & end dates of a tournament? */
+SELECT COUNT(Game.game_id) AS games_within_dates
+FROM Game
+WHERE Game.game_date BETWEEN '2024-01-01' AND '2024-01-15';
+
+/* 8) How many teams have participated in more than 1 tournament? */
+-- Modified to output even if no teams qualify
+SELECT Team.team_name, COUNT(DISTINCT Team.tournament_id) AS tournaments_participated
+FROM Team
+GROUP BY Team.team_name
+HAVING COUNT(DISTINCT Team.tournament_id) > 1
+UNION ALL
+SELECT 'No teams', 0
+WHERE NOT EXISTS (
+    SELECT Team.team_name
+    FROM Team
+    GROUP BY Team.team_name
+    HAVING COUNT(DISTINCT Team.tournament_id) > 1
+);
+
+/* SECTION 5 - DELETE ROWS */
+
+DELETE FROM Player WHERE player_id = 3;
+
+/* SECTION 6 - DROP TABLES */
+
+DROP TABLE IF EXISTS GameStats;
+DROP TABLE IF EXISTS Game;
+DROP TABLE IF EXISTS GameStatus;
+DROP TABLE IF EXISTS Player;
+DROP TABLE IF EXISTS Team;
+DROP TABLE IF EXISTS Tournament;
+
+SHOW TABLES;
